@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AddShidunziDialog</class>
+ <widget class="QDialog" name="AddShidunziDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>360</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>批量添加石墩子</string>
+  </property>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>180</y>
+     <width>341</width>
+     <height>291</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="trackRuleComboBox">
+   <property name="geometry">
+    <rect>
+     <x>282</x>
+     <y>50</y>
+     <width>69</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>线性</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>二次函数</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>反二次函数</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>圆弧</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>反圆弧</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>53</y>
+     <width>271</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>轨道数：从　　　　　　到　　　　　　插入方式</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="trackBeginSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>77</x>
+     <y>50</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="trackEndSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>162</x>
+     <y>50</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>3</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="yOffsetRuleComboBox">
+   <property name="geometry">
+    <rect>
+     <x>282</x>
+     <y>80</y>
+     <width>69</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>线性</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>二次函数</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>反二次函数</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>圆弧</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>反圆弧</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>83</y>
+     <width>271</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y轴偏移：从　　　　　　到　　　　　　插入方式</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="yOffsetBeginSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>77</x>
+     <y>80</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="yOffsetEndSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>162</x>
+     <y>80</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>3</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="sizeRuleComboBox">
+   <property name="geometry">
+    <rect>
+     <x>282</x>
+     <y>110</y>
+     <width>69</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>线性</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>二次函数</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>反二次函数</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>圆弧</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>反圆弧</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>24</x>
+     <y>113</y>
+     <width>271</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>大小：从　　　　　　到　　　　　　插入方式</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="sizeBeginSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>77</x>
+     <y>110</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="sizeEndSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>162</x>
+     <y>110</y>
+     <width>62</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="generateButton">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>150</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>生成</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="saveButton">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>150</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>20</y>
+     <width>301</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>时间轴：从　　　　　　　　间隔　　　　分插入数量</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="splitSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>197</x>
+     <y>17</y>
+     <width>42</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>16</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="numberSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>306</x>
+     <y>17</y>
+     <width>42</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="specialValueText">
+    <string>15</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="timeBeginLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>74</x>
+     <y>18</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>100,4,16</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>13</x>
+     <y>154</y>
+     <width>71</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>绝赞</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
