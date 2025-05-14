@@ -1,21 +1,21 @@
-#ifndef SHIDUNZI_H
-#define SHIDUNZI_H
-
-#include <fstream>
+#pragma once
+//#include <fstream>
 #include <string>
-#include <vector>
+//#include <vector>
+//#include <queue>
 #include <sstream>
-#include <regex>
+//#include <regex>
 #include <QMainWindow>
 #include <QDebug>
-#include <QMessageBox>
-#include <cmath>
+//#include <QMessageBox>
+//#include <cmath>
 
 const float EPSILON = 0.0001f;
 
 class Shidunzi
 {
 private:
+    //属性
     char type;
     float beat;
     int numerator;
@@ -25,13 +25,21 @@ private:
     int deleteCount = 0;
     float size = 1;
     float yOffset = 0;
+    //状态变量
     bool isNew = true;
+    bool isNoMulti = false;
+    //set func
+    void Set(const int dom, const float tb, const int b, const float t, const char type);
+    //static vars
+    static int tag_index;
 public:
-    //construtor
-    Shidunzi(int, int, float, bool);
-    Shidunzi(int, int, float, char);
-    Shidunzi(int, float, int, float, bool);
-    Shidunzi(int, float, int, float, char);
+    //construtor & operator=
+    Shidunzi(const int, const int, const float, const bool);
+    Shidunzi(const int, const int, const float, const char);
+    Shidunzi(const int, const float, const int, const float, const bool);
+    Shidunzi(const int, const float, const int, const float, const char);
+    Shidunzi(const Shidunzi&);
+    const Shidunzi& operator=(const Shidunzi & s);
     //getters
     inline char getType() const { return type; }
     inline float getBeat() const { return beat; }
@@ -47,11 +55,14 @@ public:
     inline void setTrack(const float F) { track = F; }
     inline void setYOffset(const float F) { yOffset = F; }
     inline void setSize(const float F) { size = F; }
+    static inline void resetTag_index() { tag_index = 0; }
     //methods
     void input (const QString&);
     void output (std::stringstream&);
     //friends
     friend class ShidunziStack;
+    friend bool operator<(const Shidunzi& s1,const Shidunzi& s2);
+    friend bool operator>(const Shidunzi& s1,const Shidunzi& s2);
 };
 
 struct SongInfomation {
@@ -84,45 +95,8 @@ struct ExTouch
     TouchSet ts;
 };
 
-const TouchSet defaultTouchSet[33]{
-    {"A1",0,0.33f,0},
-    {"A2",0.33f,0,0},
-    {"A3",0.33f,0,0},
-    {"A4",0,-0.33f,0},
-    {"A5",0,-0.33f,0},
-    {"A6",-0.33f,0,0},
-    {"A7",-0.33f,0,0},
-    {"A8",0,0.33f,0},
-    {"B1",0,0.25f,0},
-    {"B2",0.25f,0,0},
-    {"B3",0.25f,0,0},
-    {"B4",0,-0.25f,0},
-    {"B5",0,-0.25f,0},
-    {"B6",-0.25f,0,0},
-    {"B7",-0.25f,0,0},
-    {"B8",0,0.25f,0},
-    {"C",0,0,0},
-    {"D1",0,0.5f,0},
-    {"D2",0.5f,0.5f,0},
-    {"D3",0.5f,0,0},
-    {"D4",0.5f,-0.5f,0},
-    {"D5",0,-0.5f,0},
-    {"D6",-0.5f,-0.5f,0},
-    {"D7",-0.5f,0,0},
-    {"D8",-0.5f,0.5f,0},
-    {"E1",0,0.25f,0},
-    {"E2",0.25f,0.25f,0},
-    {"E3",0.25f,0,0},
-    {"E4",0.25f,-0.25f,0},
-    {"E5",0,-0.25f,0},
-    {"E6",-0.25f,-0.25f,0},
-    {"E7",-0.25f,0,0},
-    {"E8",-0.25f,0.25f,0}
-};
 int extractValue(const std::string& s, const std::string& key);
 bool extractBool(const std::string& s, const std::string& key);
 float extractFloat(const std::string& s, const std::string& key);
 std::string extractString(const std::string& s, const std::string& key);
 std::string extractString(const std::string& s, const std::string& key, const char&);
-
-#endif // SHIDUNZI_H

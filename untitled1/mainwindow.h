@@ -1,6 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#pragma once
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QPushButton>
@@ -10,12 +8,15 @@
 #include <QtMultimediaWidgets>
 #include <QVBoxLayout>
 #include "shidunzistack.h"
-#include "settingwindow.h"
 #include "addshidunzidialog.h"
+#include "preview.h"
+#include "maindata.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+const QString MainTitle = "vm2sdz 1.8.5 by Iriel";
 
 class MainWindow : public QMainWindow
 {
@@ -37,8 +38,9 @@ private slots:
     void slot_chartView();
 
     void slot_addShidunzi();
-    void slot_setting();
 
+    void slot_preview();
+    void slot_play();
     void slot_help();
     void slot_updateDialog();
 
@@ -47,28 +49,33 @@ private slots:
 
     void slot_quit();
 
+    //石墩子偏移设置
+    void slot_st_help();
+    void slot_st_save();
+
     void slot_addShidunzi_save(std::vector<Shidunzi> &newShidunzi);
 
     void on_comboBox_activated(int index);
 
-    inline void on_checkBox_stateChanged(int arg1)  {gcd_state = arg1;}
-
+    inline void on_checkBox_clicked (bool checked)  {mainData.gcd_state = checked;}
     inline void on_boomButton_pressed() {player.stop(); player.play();}
+    inline void on_checkBox_sort_clicked (bool checked) {mainData.sort_state = checked;}
+
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    virtual void dropEvent(QDropEvent *event);
 
 private:
 
+    MainData mainData;
     QString savePath;
     QString importPath;
     QString backgroundPath;
     QString trackPath;
     QPixmap background;
     QMediaPlayer player;
+    QTimer timer;
 
-    SongInfomation SongInfo;
     ShidunziStack stack;
-    std::vector<ExStone> exs;
-    std::vector<ExTouch> ext;
-    std::string currentContent;
 
     std::stringstream buffer;
     QString hint;
@@ -77,15 +84,11 @@ private:
 
     void menuInit();
     void display();
-    void setHint(const QString);
-    void setHint(const QString, const QStringList);
+    void setHint(QString);
+    void setHint(QString, QStringList);
     QString findPath(QString&, const std::string&);
-    void importFile(QFile&);
-    void importFile(QString&);
+    bool importFile(QFile&);
+    bool importFile(QString&);
     void saveFile(QFile&);
     void saveFile(QString&);
-
-    int importDiff;
-    bool gcd_state;
 };
-#endif // MAINWINDOW_H

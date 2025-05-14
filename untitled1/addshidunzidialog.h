@@ -1,5 +1,4 @@
-#ifndef ADDSHIDUNZIDIALOG_H
-#define ADDSHIDUNZIDIALOG_H
+#pragma once
 
 #include <cmath>
 #include <QDialog>
@@ -32,7 +31,10 @@ private slots:
     inline void on_sizeRuleComboBox_activated(int index)            {rule.mode[2] = index;}
     inline void on_splitSpinBox_valueChanged(int arg1)           {rule.split = arg1;}
     inline void on_numberSpinBox_valueChanged(int arg1)          {rule.number = arg1;}
-    inline void on_checkBox_stateChanged(int arg1)                  {rule.isBreak = arg1;}
+    inline void on_lineEdit_textEdited(const QString &arg1)
+    {
+        rule.type = arg1.front().toLatin1();
+    }
 
     void on_timeBeginLineEdit_textEdited(const QString &arg1);
 
@@ -50,19 +52,17 @@ private:
         float track_begin = 1;
         float track_end = 3;
         float yOffset_begin = 0;
-        float yOffset_end = 3;
+        float yOffset_end = 0;
         float size_begin = 1;
         float size_end = 1;
         int mode[3] = {};
         int time_begin[3] = {100,4,16};
         int split = 16;
         int number = 15;
-        bool isBreak = false;
+        char type = 'D';
     } rule;
 
     Ui::AddShidunziDialog *ui;
 
-    float rate(const int &i, const int &mode = 0);
+    float rate(const int i, const int mode = 0);
 };
-
-#endif // ADDSHIDUNZIDIALOG_H

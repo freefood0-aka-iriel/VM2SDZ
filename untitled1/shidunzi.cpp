@@ -1,39 +1,67 @@
 #include "shidunzi.h"
 
-Shidunzi::Shidunzi(int dom, int b, float t, bool iB = false)
+int Shidunzi::tag_index = 0;
+
+void Shidunzi::Set(const int dom, const float tb, const int b, const float t, const char type)
+{
+    denominator = dom;
+    beat = tb;
+    numerator = b;
+    track = t;
+    Shidunzi::type = type;
+}
+
+Shidunzi::Shidunzi(const int dom, const int b, const float t, const bool iB = false)
 {
     type = iB ? 'X' : 'D';
     beat = static_cast<float>(b) / dom;
-    numerator = b % dom;
-    denominator = dom;
-    track = t;
+    Set(dom, beat, b % dom, t, type);
 }
 
-Shidunzi::Shidunzi(int dom, int b, float t, char type = 'D')
+Shidunzi::Shidunzi(const int dom, const int b, const float t, const char type)
 {
-    Shidunzi::type = type;
     beat = static_cast<float>(b) / dom;
-    numerator = b % dom;
-    denominator = dom;
-    track = t;
+    Set(dom, beat, b % dom, t, type);
 }
 
-Shidunzi::Shidunzi(int dom, float tb, int b, float t, bool iB = false)
+Shidunzi::Shidunzi(const int dom, const float tb, const int b, const float t, const bool iB = false)
 {
     type = iB ? 'X' : 'D';
-    beat = tb;
-    numerator = b % dom;
-    denominator = dom;
-    track = t;
+    Set(dom, tb, b % dom, t, type);
 }
 
-Shidunzi::Shidunzi(int dom, float tb, int b, float t, char type = 'D')
+Shidunzi::Shidunzi(const int dom, const float tb, const int b, const float t, const char type)
 {
-    Shidunzi::type = type;
-    beat = tb;
-    numerator = b % dom;
-    denominator = dom;
-    track = t;
+    Set(dom, tb, b % dom, t, type);
+}
+
+Shidunzi::Shidunzi(const Shidunzi& s)
+{
+    Set(s.denominator, s.beat, s.numerator, s.track, s.type);
+    count = s.count;
+    deleteCount = s.deleteCount;
+    yOffset = s.yOffset;
+    size = s.size;
+}
+
+const Shidunzi& Shidunzi::operator=(const Shidunzi & s)
+{
+    Set(s.denominator, s.beat, s.numerator, s.track, s.type);
+    count = s.count;
+    deleteCount = s.deleteCount;
+    yOffset = s.yOffset;
+    size = s.size;
+    return *this;
+}
+
+bool operator<(const Shidunzi& s1,const Shidunzi& s2)
+{
+    return s1.beat < s2.beat;
+}
+
+bool operator>(const Shidunzi& s1,const Shidunzi& s2)
+{
+    return s1.beat > s2.beat;
 }
 
 // 从字符串提取整数值
@@ -165,13 +193,29 @@ void Shidunzi::input(const QString & Qstr)
 
 void Shidunzi::output(std::stringstream & buffer)
 {
+    // 输出标记类型
+    if (type == 'T') {
+        buffer << "//Tag " << tag_index << " at " << static_cast<int>(beat) << ","
+               << numerator << "," << denominator << "\n";
+        tag_index++;
+        return;
+    }
+    // 通用输出
     buffer << type << "," << static_cast<int>(beat) << ","
            << numerator << "," << denominator;
-    if (type=='H')
+    // 输出表演类型
+    if (type == 'H') {
         buffer << "\n";
-    else if (type=='B')
+        return;
+    }
+    // 输出BPM变化类型
+    else if (type == 'B') {
         buffer << "," << track << "\n";
-    else
+        return;
+    }
+    // 输出石墩子类型
+    else {
         buffer << "," << track << "," << count << ","
                << deleteCount << "," << size << "," << yOffset << "\n";
+    }
 }

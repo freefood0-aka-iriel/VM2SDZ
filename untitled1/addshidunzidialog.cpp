@@ -1,5 +1,11 @@
 #include "addshidunzidialog.h"
 #include "ui_addshidunzidialog.h"
+#include <QRandomGenerator>
+#include <QMessageBox>
+#include <iomanip>
+#include "easing.h"
+
+static QRandomGenerator* generator = QRandomGenerator::global();
 
 AddShidunziDialog::AddShidunziDialog(QWidget *parent) :
     QDialog(parent),
@@ -13,8 +19,9 @@ AddShidunziDialog::~AddShidunziDialog()
     delete ui;
 }
 
-float AddShidunziDialog::rate(const int &i,const int &mode)
+float AddShidunziDialog::rate(const int i, const int mode)
 {
+    using namespace easing;
     float rate = float(i) / (rule.number-1);
     float fixrate = 0;
     switch (mode)
@@ -22,17 +29,14 @@ float AddShidunziDialog::rate(const int &i,const int &mode)
     case 0:
         fixrate = rate;
         break;
-    case 1:
-        fixrate = - rate * (rate - 2);
+    case 31:
+        fixrate = (double)generator->bounded(10000)/10000;
         break;
-    case 2:
-        fixrate = rate * rate;
-        break;
-    case 3:
-        fixrate = sqrt(1 - (rate - 1) * (rate - 1));
-        break;
-    case 4:
-        fixrate = 1 - sqrt(1 - rate * rate);
+    default:
+        auto it = easingFunctions.find(mode-1);
+        if (it != easingFunctions.end()) {
+            fixrate = it->second(rate);
+        }
         break;
     }
     return fixrate;
@@ -61,7 +65,7 @@ void AddShidunziDialog::on_generateButton_clicked()
     }
     buffer.str(std::string());
     stones.clear();
-//    qDebug()<<QString::fromStdString(buffer.str());
+    //    qDebug()<<QString::fromStdString(buffer.str());
     for (int i = 0; i < rule.number; i++)
     {
         int beat = rule.time_begin[0];
@@ -72,12 +76,11 @@ void AddShidunziDialog::on_generateButton_clicked()
         float track = rule.track_begin + (rule.track_end - rule.track_begin) * rate(i,rule.mode[0]);
         float yOffset = rule.yOffset_begin + (rule.yOffset_end - rule.yOffset_begin) * rate(i,rule.mode[1]);
         float size = rule.size_begin + (rule.size_end - rule.size_begin) * rate(i,rule.mode[2]);
-        Shidunzi s = {denominator, numerator, track, rule.isBreak};
+        Shidunzi s = {denominator, numerator, track, rule.type};
         s.setTrack(track);
         s.setYOffset(yOffset);
         s.setSize(size);
         stones.push_back(s);
-        qDebug()<<stones.size();
 
         buffer << s.getType() << "," << beat << ","
                << numerator << "," << denominator << ","

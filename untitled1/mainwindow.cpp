@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-TouchSet nowTouchSet[33]={};
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -18,13 +16,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::menuInit()
 {
-    setWindowTitle("VM2SDZ 1.8.2 by Iriel");
+    setWindowTitle(MainTitle);
     player.setMedia(QUrl::fromLocalFile("./boom.mp3"));
 
-    ui->graphicsView->setStyleSheet("background-color: rgba(255, 255, 255, 192);");
+    ui->background_2->setStyleSheet("background-color: rgba(255, 255, 255, 192);");
 
-    for (int i = 0; i < 33; i++)
-        nowTouchSet[i] = defaultTouchSet[i];
     connect(ui->newAct, &QAction::triggered, this, &MainWindow::slot_new);
 
     connect(ui->openAct, &QAction::triggered, this, &MainWindow::slot_open);
@@ -44,8 +40,13 @@ void MainWindow::menuInit()
 
     connect(ui->addShidunziAct, &QAction::triggered, this, &MainWindow::slot_addShidunzi);
 
-    connect(ui->settingAct, &QAction::triggered, this, &MainWindow::slot_setting);
-    connect(ui->settingButton, &QAbstractButton::clicked, this, &MainWindow::slot_setting);
+    //进入石墩子偏移设置窗口
+    connect(ui->settingAct, &QAction::triggered, this, [this](){ui->tabWidget->setCurrentWidget(ui->settingTab);});
+    connect(ui->st_saveButton, &QAbstractButton::clicked, this, &MainWindow::slot_st_save);
+    connect(ui->st_helpButton, &QAbstractButton::clicked, this, &MainWindow::slot_st_help);
+
+    connect(ui->previewAct, &QAction::triggered, this, &MainWindow::slot_preview);
+    connect(ui->playAct, &QAction::triggered, this, &MainWindow::slot_play);
 
     connect(ui->helpAct, &QAction::triggered, this, &MainWindow::slot_help);
     connect(ui->dailyAct, &QAction::triggered, this, &MainWindow::slot_updateDialog);
@@ -55,6 +56,10 @@ void MainWindow::menuInit()
 
     connect(ui->quitAct, &QAction::triggered, this, &MainWindow::slot_quit);
     ui->comboBox->setCurrentIndex(4);
-    this->importDiff = ui->comboBox->currentIndex();
-    this->gcd_state = ui->checkBox->checkState();
+    mainData.importDiff = ui->comboBox->currentIndex();
+    mainData.gcd_state = ui->checkBox->checkState();
+    mainData.sort_state = ui->checkBox_sort->checkState();
+
+    ui->st_textEdit->setText(QString::fromStdString(mainData.setting));
+    ui->tabWidget->setCurrentWidget(ui->editTab);
 }

@@ -6,16 +6,17 @@ void MainWindow::display()
     ui->textEdit->clear();
     buffer.str(std::string());
     buffer << "[Meta]\n"
-           << "title = " << SongInfo.title << "\n"
-           << "level = " << SongInfo.level << "\n"
-           << "author = " << SongInfo.author << "\n"
-           << "mapper = " << SongInfo.mapper << "\n"
-           << "offset = " << SongInfo.offset << "\n"
-           << "bg_offset = " << SongInfo.bg_offset << "\n"
-           << "bpm = " << SongInfo.bpm << "\n"
+           << "title = " << mainData.SongInfo.title << "\n"
+           << "level = " << mainData.SongInfo.level << "\n"
+           << "author = " << mainData.SongInfo.author << "\n"
+           << "mapper = " << mainData.SongInfo.mapper << "\n"
+           << "offset = " << mainData.SongInfo.offset << "\n"
+           << "bg_offset = " << mainData.SongInfo.bg_offset << "\n"
+           << "bpm = " << mainData.SongInfo.bpm << "\n"
            << "[Data]\n";
-    stack.sortByTotalBeat();
-    if (gcd_state)
+    if (mainData.sort_state)
+        stack.sortByTotalBeat();
+    if (mainData.gcd_state)
         stack.gcd();
     stack.bpmAdjust();
     stack.output(buffer);
@@ -32,14 +33,14 @@ QString MainWindow::findPath(QString& path, const std::string& file)
     return targetFilePath;
 }
 
-void MainWindow::setHint(const QString hintMessage)
+void MainWindow::setHint(QString hintMessage)
 {
     hint.clear();
     hint = hintMessage;
     ui->hintLabel->setText(hint);
 }
 
-void MainWindow::setHint(const QString prefix, const QStringList messages)
+void MainWindow::setHint(QString prefix, QStringList messages)
 {
     hint.clear();
     hint = prefix;
@@ -50,49 +51,72 @@ void MainWindow::setHint(const QString prefix, const QStringList messages)
     ui->hintLabel->setText(hint);
 }
 
-void MainWindow::importFile(QFile& file)
+bool MainWindow::importFile(QFile& file)
 {
     file.open(QIODevice::ReadOnly);
     QByteArray ba = file.readAll();
     const std::string content = ba.toStdString();
 
     stack = ShidunziStack();
-
+    int i;
     if (content.find("songName") != std::string::npos)
     {
-        stack.read_as_VM(content,exs,ext,SongInfo,importDiff);
+        i = stack.read_as_VM(content, mainData);
     }
     else if (content.find("&inote_") != std::string::npos)
     {
-        int i = stack.read_as_Simai(content,exs,ext,SongInfo,importDiff);
-        if (i == -1)
-            QMessageBox::information(this, "导入失败", "导入Simai格式时，请确保谱面没有hold");
+        i = stack.read_as_Simai(content, mainData);
     }
     else if (content.find("osu file") != std::string::npos)
     {
-        stack.read_as_OSU(content,exs,ext,SongInfo);
+        i = stack.read_as_OSU(content, mainData);
     }
     else
     {
         hint.append("导入失败");
         QMessageBox::information(this, "导入失败", "请检查文件格式是否正确" );
-        return;
+        return false;
     }
-    for (const auto& beat : exs)
+    if (i == -1)
+    {
+        hint.append("导入失败");
+        QMessageBox::information(this, "导入失败", "谱面格式可能出现了一些异常");
+        return false;
+    }
+    for (const auto& beat : mainData.exs)
         stack.countAdjust(beat);
-    for (const auto& beat : ext)
+    for (const auto& beat : mainData.ext)
         stack.positionAdjust(beat);
 
     hint.append("已导入：");
     hint.append(importPath);
+
+    QString bgFile_str = (findPath(importPath,"/bg.png"));
+    QFile bgFile(bgFile_str);
+    if (bgFile.exists())
+    {
+        if (background.load(bgFile_str))
+        {
+            ui->background->setPixmap(background);
+        }
+    }
+    else
+    {
+        hint.append("，但未找到png背景图片");
+        ui->background->setPixmap(QPixmap());
+    }
+    setHint(hint);
+
     display();
     file.close();
+    return true;
 }
 
-void MainWindow::importFile(QString& prefile)
+bool MainWindow::importFile(QString& prefile)
 {
+    importPath = prefile;
     QFile file(prefile);
-    importFile(file);
+    return importFile(file);
 }
 
 void MainWindow::saveFile(QFile& file)
@@ -114,9 +138,4 @@ void MainWindow::saveFile(QString& prefile)
 {
     QFile file(prefile);
     saveFile(file);
-}
-
-void MainWindow::on_comboBox_activated(int index)
-{
-    importDiff = index;
 }
