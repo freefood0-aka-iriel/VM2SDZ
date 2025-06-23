@@ -1,25 +1,17 @@
 #pragma once
-//#include <fstream>
 #include <string>
-//#include <vector>
-//#include <queue>
 #include <sstream>
-//#include <regex>
 #include <QMainWindow>
 #include <QDebug>
-//#include <QMessageBox>
-//#include <cmath>
+#include "fraction.h"
 
 const float EPSILON = 0.0001f;
 
 class Shidunzi
 {
 private:
-    //属性
-    char type;
-    float beat;
-    int numerator;
-    int denominator;
+    char type;      //属性
+    Fraction beat;  //拍数，是一个分数类
     float track;
     int count = 1;
     int deleteCount = 0;
@@ -29,22 +21,18 @@ private:
     bool isNew = true;
     bool isNoMulti = false;
     //set func
-    void Set(const int dom, const float tb, const int b, const float t, const char type);
+    void Set(const int dom, const int b, const float t, const char type);
     //static vars
     static int tag_index;
 public:
     //construtor & operator=
     Shidunzi(const int, const int, const float, const bool);
     Shidunzi(const int, const int, const float, const char);
-    Shidunzi(const int, const float, const int, const float, const bool);
-    Shidunzi(const int, const float, const int, const float, const char);
     Shidunzi(const Shidunzi&);
     const Shidunzi& operator=(const Shidunzi & s);
     //getters
     inline char getType() const { return type; }
-    inline float getBeat() const { return beat; }
-    inline int getNumerator() const { return numerator; }
-    inline int getDenominator() const { return denominator; }
+    inline float getBeat() const { return beat.tofloat(); }
     inline float getTrack() const { return track; }
     inline int getCount() const { return count; }
     inline int getDeleteCount() const { return deleteCount; }
@@ -57,6 +45,7 @@ public:
     inline void setSize(const float F) { size = F; }
     static inline void resetTag_index() { tag_index = 0; }
     //methods
+    inline void filp() { track = 4 - track; }
     void input (const QString&);
     void output (std::stringstream&);
     //friends
@@ -65,19 +54,9 @@ public:
     friend bool operator>(const Shidunzi& s1,const Shidunzi& s2);
 };
 
-struct SongInfomation {
-    std::string title = "Unknown";
-    std::string level = "0";
-    std::string author = "Unknown";
-    std::string mapper = "Unknown";
-    float offset = 0;
-    float bg_offset = -0.54f;
-    float bpm = 125;
-};
-
 struct ExStone
 {
-    float beat;
+    Fraction beat;
     bool isEx;
 };
 
@@ -91,7 +70,7 @@ struct TouchSet
 
 struct ExTouch
 {
-    float beat;
+    Fraction beat;
     TouchSet ts;
 };
 

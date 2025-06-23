@@ -9,14 +9,13 @@
 #include <QVBoxLayout>
 #include "shidunzistack.h"
 #include "addshidunzidialog.h"
-#include "preview.h"
 #include "maindata.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-const QString MainTitle = "vm2sdz 1.8.5 by Iriel";
+const QString MainTitle = "vm2sdz 1.9.0 beta by Iriel";
 
 class MainWindow : public QMainWindow
 {
@@ -56,13 +55,19 @@ private slots:
     void slot_addShidunzi_save(std::vector<Shidunzi> &newShidunzi);
 
     void on_comboBox_activated(int index);
-
-    inline void on_checkBox_clicked (bool checked)  {mainData.gcd_state = checked;}
     inline void on_boomButton_pressed() {player.stop(); player.play();}
+
     inline void on_checkBox_sort_clicked (bool checked) {mainData.sort_state = checked;}
+    inline void on_checkBox_mirror_clicked(bool checked) {mainData.mirror_state = checked;}
 
     virtual void dragEnterEvent(QDragEnterEvent *event);
     virtual void dropEvent(QDropEvent *event);
+
+    void on_doubleSpinBox_valueChanged(double arg1);
+    void on_lineEdit_difficulty_textChanged(const QString &arg1);
+    void on_comboBox_mass_activated(int index);
+    void on_comboBox_chartingMode_activated(int index);
+
 
 private:
 

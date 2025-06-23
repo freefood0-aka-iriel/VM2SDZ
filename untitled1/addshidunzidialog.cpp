@@ -26,14 +26,11 @@ float AddShidunziDialog::rate(const int i, const int mode)
     float fixrate = 0;
     switch (mode)
     {
-    case 0:
-        fixrate = rate;
-        break;
     case 31:
         fixrate = (double)generator->bounded(10000)/10000;
         break;
     default:
-        auto it = easingFunctions.find(mode-1);
+        auto it = easingFunctions.find(mode);
         if (it != easingFunctions.end()) {
             fixrate = it->second(rate);
         }

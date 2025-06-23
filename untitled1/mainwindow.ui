@@ -126,90 +126,13 @@ QMessageBox QPushButton {
       <string>+</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>71</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>约分</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_3">
-     <property name="geometry">
-      <rect>
-       <x>130</x>
-       <y>15</y>
-       <width>54</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>导入难度</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="comboBox">
-     <property name="geometry">
-      <rect>
-       <x>195</x>
-       <y>10</y>
-       <width>69</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="currentText">
-      <string>Easy</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>Easy</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Basic</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Advanced</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Expert</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Master</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Re:Master</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>宴会场</string>
-      </property>
-     </item>
-    </widget>
     <widget class="QLabel" name="hintLabel">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>70</y>
+       <y>50</y>
        <width>261</width>
-       <height>141</height>
+       <height>161</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -225,22 +148,6 @@ QMessageBox QPushButton {
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
      <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="checkBox_sort">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>40</y>
-       <width>71</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>排序</string>
-     </property>
-     <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
@@ -339,6 +246,9 @@ QMessageBox QPushButton {
     </layout>
    </widget>
    <widget class="QTabWidget" name="tabWidget">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -357,7 +267,7 @@ QMessageBox QPushButton {
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="editTab">
      <property name="styleSheet">
@@ -498,9 +408,9 @@ QMessageBox QPushButton {
      <widget class="QScrollArea" name="scrollArea">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>150</x>
         <y>0</y>
-        <width>441</width>
+        <width>361</width>
         <height>531</height>
        </rect>
       </property>
@@ -515,7 +425,7 @@ QMessageBox QPushButton {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>425</width>
+         <width>345</width>
          <height>3000</height>
         </rect>
        </property>
@@ -528,7 +438,7 @@ QMessageBox QPushButton {
        <widget class="QLabel" name="label_4">
         <property name="geometry">
          <rect>
-          <x>160</x>
+          <x>120</x>
           <y>-10</y>
           <width>151</width>
           <height>91</height>
@@ -552,7 +462,7 @@ QMessageBox QPushButton {
      <widget class="QPushButton" name="playButton">
       <property name="geometry">
        <rect>
-        <x>460</x>
+        <x>10</x>
         <y>480</y>
         <width>41</width>
         <height>41</height>
@@ -638,6 +548,205 @@ QMessageBox QPushButton {
       <property name="text">
        <string>帮助</string>
       </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>导入设置</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>381</width>
+        <height>208</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <property name="rowWrapPolicy">
+        <enum>QFormLayout::DontWrapRows</enum>
+       </property>
+       <property name="labelAlignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+       <property name="formAlignment">
+        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="checkBox_mirror">
+         <property name="text">
+          <string>镜像</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>从maimai导入的每个石墩子将执行 track = 4-track</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="checkBox_sort">
+         <property name="text">
+          <string>排序</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>每次修改石墩子对其排序；变 BPM 歌曲请勿取消</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>导入难度</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="comboBox">
+         <property name="currentText">
+          <string>Easy</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Easy</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Basic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Advanced</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Expert</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Master</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Re:Master</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>宴会场</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>mass 字段</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QComboBox" name="comboBox_mass">
+         <item>
+          <property name="text">
+           <string>质量=等级*100000/15</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>质量=等级</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>difficulty</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="lineEdit_difficulty">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>若difficulty为空，则根据导入难度决定</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>bg_offset字段</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="comboBox_chartingMode">
+         <item>
+          <property name="text">
+           <string>三轨模式</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>五轨模式</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>写谱模式</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>在五轨模式下，3号键1轨，7号键3轨，方便写0.5</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QDoubleSpinBox" name="doubleSpinBox">
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </widget>

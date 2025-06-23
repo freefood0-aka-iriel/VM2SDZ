@@ -2,6 +2,18 @@
 #include <QMainWindow>
 #include "shidunzi.h"
 
+struct SongInfomation {
+    std::string title = "Unknown";
+    std::string level = "0";
+    int mass = 0;
+    std::string author = "Unknown";
+    std::string mapper = "Unknown";
+    std::string difficulty = "Powerful";
+    float offset = 0;
+    float bg_offset = 0;
+    float bpm = 125;
+};
+
 // MainWindow的数据类，单例
 class MainData
 {
@@ -83,14 +95,20 @@ public:
     std::string setting;
     // 导入难度
     int importDiff;
-    // 约分标志位
-    bool gcd_state;
-    // 排序标志位
-    bool sort_state;
+    // mass字段
+    int massRule = 0;
+    // 写谱模式
+    int chartingMode = 0;
+    // 标志位
+    bool mirror_state = 0;
+    bool sort_state = 1;
+    bool difficulty_empty = 1;
     // 不知道这是什么东西
     std::string currentContent;
 
     SongInfomation SongInfo;
     std::vector<ExStone> exs;
     std::vector<ExTouch> ext;
+
+    static const QString sdz_difficulty[6];
 };

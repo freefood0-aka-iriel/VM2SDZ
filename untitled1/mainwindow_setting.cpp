@@ -28,4 +28,5 @@ void MainWindow::slot_st_save()
         mainData.nowTouchSet[i].size = extractFloat(note, "size:");
         i++;
     }
+    setHint("已保存设置");
 }

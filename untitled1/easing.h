@@ -1,11 +1,14 @@
-#ifndef EASING_H
-#define EASING_H
+#pragma once
 
 #include <cmath>
 #include <unordered_map>
 #include <functional>
 
 namespace easing {
+
+inline double easeLinear(double t) {
+    return t;
+}
 
 // Sine
 inline double easeInSine(double t) {
@@ -177,38 +180,37 @@ inline double easeInOutBounce(double t) {
 }
 
 const std::unordered_map<int, std::function<double(double)>> easingFunctions = {
-        {0, easeInSine},
-        {1, easeOutSine},
-        {2, easeInOutSine},
-        {3, easeInQuad},
-        {4, easeOutQuad},
-        {5, easeInOutQuad},
-        {6, easeInCubic},
-        {7, easeOutCubic},
-        {8, easeInOutCubic},
-        {9, easeInQuart},
-        {10, easeOutQuart},
-        {11, easeInOutQuart},
-        {12, easeInQuint},
-        {13, easeOutQuint},
-        {14, easeInOutQuint},
-        {15, easeInExpo},
-        {16, easeOutExpo},
-        {17, easeInOutExpo},
-        {18, easeInCirc},
-        {19, easeOutCirc},
-        {20, easeInOutCirc},
-        {21, easeInBack},
-        {22, easeOutBack},
-        {23, easeInOutBack},
-        {24, easeInElastic},
-        {25, easeOutElastic},
-        {26, easeInOutElastic},
-        {27, easeInBounce},
-        {28, easeOutBounce},
-        {29, easeInOutBounce}
+        {0, easeLinear},
+        {1, easeInSine},
+        {2, easeOutSine},
+        {3, easeInOutSine},
+        {4, easeInQuad},
+        {5, easeOutQuad},
+        {6, easeInOutQuad},
+        {7, easeInCubic},
+        {8, easeOutCubic},
+        {9, easeInOutCubic},
+        {10, easeInQuart},
+        {11, easeOutQuart},
+        {12, easeInOutQuart},
+        {13, easeInQuint},
+        {14, easeOutQuint},
+        {15, easeInOutQuint},
+        {16, easeInExpo},
+        {17, easeOutExpo},
+        {18, easeInOutExpo},
+        {19, easeInCirc},
+        {20, easeOutCirc},
+        {21, easeInOutCirc},
+        {22, easeInBack},
+        {23, easeOutBack},
+        {24, easeInOutBack},
+        {25, easeInElastic},
+        {26, easeOutElastic},
+        {27, easeInOutElastic},
+        {28, easeInBounce},
+        {29, easeOutBounce},
+        {30, easeInOutBounce}
     };
 
 } // namespace Easing
-
-#endif // EASING_H

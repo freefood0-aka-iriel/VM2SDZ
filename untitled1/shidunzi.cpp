@@ -1,43 +1,34 @@
 #include "shidunzi.h"
+//#include <QDebug>
 
 int Shidunzi::tag_index = 0;
 
-void Shidunzi::Set(const int dom, const float tb, const int b, const float t, const char type)
+void Shidunzi::Set(const int dom, const int b, const float t, const char type)
 {
-    denominator = dom;
-    beat = tb;
-    numerator = b;
+    beat = Fraction(b,dom);
     track = t;
     Shidunzi::type = type;
 }
 
 Shidunzi::Shidunzi(const int dom, const int b, const float t, const bool iB = false)
+    :beat(b,dom)
 {
     type = iB ? 'X' : 'D';
-    beat = static_cast<float>(b) / dom;
-    Set(dom, beat, b % dom, t, type);
+    track = t;
 }
 
 Shidunzi::Shidunzi(const int dom, const int b, const float t, const char type)
+    :beat(b,dom)
 {
-    beat = static_cast<float>(b) / dom;
-    Set(dom, beat, b % dom, t, type);
-}
-
-Shidunzi::Shidunzi(const int dom, const float tb, const int b, const float t, const bool iB = false)
-{
-    type = iB ? 'X' : 'D';
-    Set(dom, tb, b % dom, t, type);
-}
-
-Shidunzi::Shidunzi(const int dom, const float tb, const int b, const float t, const char type)
-{
-    Set(dom, tb, b % dom, t, type);
+    track = t;
+    Shidunzi::type = type;
 }
 
 Shidunzi::Shidunzi(const Shidunzi& s)
+    :beat(s.beat)
 {
-    Set(s.denominator, s.beat, s.numerator, s.track, s.type);
+    track = s.track;
+    type = s.type;
     count = s.count;
     deleteCount = s.deleteCount;
     yOffset = s.yOffset;
@@ -46,7 +37,9 @@ Shidunzi::Shidunzi(const Shidunzi& s)
 
 const Shidunzi& Shidunzi::operator=(const Shidunzi & s)
 {
-    Set(s.denominator, s.beat, s.numerator, s.track, s.type);
+    beat = s.beat;
+    track = s.track;
+    type = s.type;
     count = s.count;
     deleteCount = s.deleteCount;
     yOffset = s.yOffset;
@@ -152,7 +145,7 @@ std::string extractString(const std::string& s, const std::string& key)
     size_t end = s.find('"', pos);
     if (end == std::string::npos)
         return "";
-    if (end - pos > 30)
+    if (end - pos > 100)
         end = s.find('\n', pos);
     return s.substr(pos, end - pos);
 }
@@ -173,13 +166,20 @@ std::string extractString(const std::string& s, const std::string& key, const ch
     return s.substr(pos, end - pos);
 }
 
+//static void checkDefault(QString & Qstr, const QChar && defaultValue)
+//{
+//    if(Qstr.isEmpty())
+//        Qstr.append(defaultValue);
+//}
+
+// 从文本中读取石墩子
 void Shidunzi::input(const QString & Qstr)
 {
     QStringList QstrList = Qstr.split(',');
+    // 如果有数据是空的，填入默认值
+    // 填入值
     type = QstrList[0].toStdString()[0];
-    beat = QstrList[1].toInt() + QstrList[2].toFloat() / QstrList[3].toInt();
-    numerator = QstrList[2].toInt();
-    denominator = QstrList[3].toInt();
+    beat = Fraction(QstrList[1].toInt() * QstrList[3].toInt() + QstrList[2].toFloat(), QstrList[3].toInt());
     if (type=='H')
         return;
     track = QstrList[4].toFloat();
@@ -191,18 +191,17 @@ void Shidunzi::input(const QString & Qstr)
     yOffset = QstrList[8].toFloat();
 }
 
+// 输出为文本
 void Shidunzi::output(std::stringstream & buffer)
 {
     // 输出标记类型
     if (type == 'T') {
-        buffer << "//Tag " << tag_index << " at " << static_cast<int>(beat) << ","
-               << numerator << "," << denominator << "\n";
+        buffer << "//Tag " << tag_index << " at " << beat.toMixedFraction() << "\n";
         tag_index++;
         return;
     }
     // 通用输出
-    buffer << type << "," << static_cast<int>(beat) << ","
-           << numerator << "," << denominator;
+    buffer << type << "," << beat.toMixedFraction();
     // 输出表演类型
     if (type == 'H') {
         buffer << "\n";

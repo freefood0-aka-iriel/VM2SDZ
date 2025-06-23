@@ -55,9 +55,10 @@ void MainWindow::menuInit()
     connect(ui->zoomOut, &QAbstractButton::clicked, this, &MainWindow::slot_zoomOut);
 
     connect(ui->quitAct, &QAction::triggered, this, &MainWindow::slot_quit);
+    //将导入难度设为master
     ui->comboBox->setCurrentIndex(4);
     mainData.importDiff = ui->comboBox->currentIndex();
-    mainData.gcd_state = ui->checkBox->checkState();
+    //选中“排序”
     mainData.sort_state = ui->checkBox_sort->checkState();
 
     ui->st_textEdit->setText(QString::fromStdString(mainData.setting));

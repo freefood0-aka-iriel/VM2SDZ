@@ -155,12 +155,49 @@ void MainWindow::slot_addShidunzi_save(std::vector<Shidunzi> &newShidunzi)
     display();
     ui->textEdit->setText(QString::fromStdString(buffer.str()));
 }
-
+// 以下是设置选项改变函数，镜像、排序选项改变请见头文件
+// 导入难度改变
 void MainWindow::on_comboBox_activated(int index)
 {
     mainData.importDiff = index;
+    if (mainData.difficulty_empty)
+        mainData.SongInfo.difficulty = MainData::sdz_difficulty[mainData.importDiff].toStdString();
 }
 
+// bg_offset改变
+void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
+{
+    mainData.SongInfo.bg_offset = arg1;
+}
+
+// 难度字段改变
+void MainWindow::on_lineEdit_difficulty_textChanged(const QString &arg1)
+{
+    if (arg1.isEmpty())
+    {
+        mainData.difficulty_empty = true;
+        mainData.SongInfo.difficulty = MainData::sdz_difficulty[mainData.importDiff].toStdString();
+    }
+    else
+    {
+        mainData.difficulty_empty = false;
+        mainData.SongInfo.difficulty = arg1.toStdString();
+    }
+}
+
+// mass字段改变
+void MainWindow::on_comboBox_mass_activated(int index)
+{
+    mainData.massRule = index;
+}
+
+// 写谱模式改变
+void MainWindow::on_comboBox_chartingMode_activated(int index)
+{
+    mainData.chartingMode = index;
+}
+
+// 以下是拖拽文件函数
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasFormat("text/uri-list"))

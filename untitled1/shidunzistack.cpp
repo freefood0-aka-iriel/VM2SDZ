@@ -4,10 +4,10 @@
 static const auto &npos = std::string::npos;
 
 // 取余
-static int mod(int a, int b)
-{
-    return (a % b + b) % b;
-}
+//static int mod(int a, int b)
+//{
+//    return (a % b + b) % b;
+//}
 
 // get物量
 int ShidunziStack::getNumber()
@@ -50,7 +50,7 @@ void ShidunziStack::countAdjust(const ExStone& exs)
 {
     for (auto& s : stones)
     {
-        if (fabs(s.beat - exs.beat) < EPSILON)
+        if (s.beat == exs.beat)
         {
             if (!s.isNoMulti)
             {
@@ -66,7 +66,7 @@ void ShidunziStack::positionAdjust(const ExTouch& ext)
 {
     for (auto& s : stones)
     {
-        if (fabs(s.beat - ext.beat) < EPSILON)
+        if (s.beat == ext.beat)
         {
             if (!s.isNoMulti)
             {
@@ -89,48 +89,21 @@ void ShidunziStack::sortByTotalBeat()
     );
 }
 
-// 约分
-void ShidunziStack::gcd()
-{
-    int i = 0;
-    for (auto& s : stones)
-    {
-        i = std::gcd(s.numerator,s.denominator);
-        s.numerator /= i;
-        s.denominator /= i;
-    }
-}
-
 void ShidunziStack::bpmAdjust()
 {
-    float lastBeat = 0;
-    int lastNumerator = 0;
-    int lastDenominator = 1;
-    int currentDenominator;
-    float swapBeat = 0;
-    int swapNumerator;
-    int swapDenominator;
+    Fraction lastBeat(Fraction::zero);
 
     for (auto& s : stones)
     {
+        // 遇到BPM变化音符，更新当前拍子和分音数
         if (s.type == 'B')
-        {
-            // 遇到BPM变化音符，更新当前拍子和分音数
-            swapBeat = s.beat; // 记录当前拍数
-            swapNumerator = s.numerator;
-            swapDenominator = s.denominator;
+        {  
+            lastBeat = s.beat;
         }
         // 对于非BPM变化音符，重新计算拍子数和分音数
-        s.beat -= lastBeat;
-        currentDenominator = std::lcm(lastDenominator , s.denominator);
-        s.numerator = mod((s.numerator * currentDenominator / s.denominator - lastNumerator * currentDenominator / lastDenominator) , currentDenominator);
-        s.denominator = currentDenominator;
-        if (swapBeat !=0 )
+        else
         {
-            lastBeat = swapBeat;
-            lastNumerator = swapNumerator;
-            lastDenominator = swapDenominator;
-            swapBeat = 0;
+            s.beat = s.beat - lastBeat;
         }
     }
 }
@@ -143,12 +116,31 @@ void ShidunziStack::append(std::vector<Shidunzi>& stones2)
     sortByTotalBeat();
 }
 
+static float _3track_mode(int button, int datum = 3)
+{
+    datum ++;
+    if (button >= datum && button <= 2+datum)
+        return button - datum + 1;
+    else
+        return 0;
+}
+
+static float _5track_mode(int button, int datum = 3)
+{
+    if (button >= datum && button <= 4+datum)
+        return (float)(button-datum)/2 + 1;
+    else
+        return 0;
+}
+
 // 以Visual Maimai格式读取，非常史，我维护不了
 int ShidunziStack::read_as_VM(const std::string& precontent, MainData& m)
 {
     stones.clear();
     m.exs.clear();
     m.ext.clear();
+    // 设置模式
+    auto transformer = m.chartingMode ? _5track_mode : _3track_mode;
     // 读取歌曲信息
     m.SongInfo.title = extractString(precontent, "\"songName\":");
     m.SongInfo.author = extractString(precontent, "\"composer\":", '"');
@@ -195,10 +187,10 @@ int ShidunziStack::read_as_VM(const std::string& precontent, MainData& m)
         if (split <= 0 || beat <= 0)
             continue;           //剔除无效项
         beat *= 4;
-        float total_beat = static_cast<float>(beat) / split;
 
-        Shidunzi s(split, total_beat, beat, button, 'B');
+        Shidunzi s(split, beat, button, 'B');
         push(s);
+        stones.back().isNoMulti = true;
     }
 
 
@@ -229,20 +221,20 @@ int ShidunziStack::read_as_VM(const std::string& precontent, MainData& m)
             continue;           //剔除无效项
 
         beat *= 4;
-        float total_beat = static_cast<float>(beat) / split;
 
         char C = isEx ? 'S' : (isBreak ? 'X' : 'D');
 
+        float track = transformer(button,3);
         //如果按键为4到6，压入石墩子，否则压入ex列表
-        if (button >= 4 && button <= 6)
+        if (track)
         {
-            Shidunzi s(split, total_beat, beat, button-3, C);
+            Shidunzi s(split, beat, track, C);
             push(s);
             stones.back().isNoMulti = isNoMulti;
         }
         else
         {
-            m.exs.push_back({ total_beat, isEx });
+            m.exs.push_back({ Fraction(beat,split), isEx });
         }
     }
 
@@ -283,15 +275,14 @@ int ShidunziStack::read_as_VM(const std::string& precontent, MainData& m)
         }
 
         beat *= 4;
-        float total_beat = static_cast<float>(beat) / split;
 
         if (buttonName[0]=='C') {
-            Shidunzi s(split, total_beat, beat, 0, 'T');
+            Shidunzi s(split, beat, 0, 'T');
             push(s);
         }
         else {
             button += (int)(buttonName[1]-'1');
-            m.ext.push_back({total_beat,m.nowTouchSet[button]});
+            m.ext.push_back({Fraction(beat,split),m.nowTouchSet[button]});
         }
     }
 
@@ -318,12 +309,11 @@ int ShidunziStack::read_as_VM(const std::string& precontent, MainData& m)
         int split = extractValue(touchHold, "\"split\":");   //分音
         int beat = extractValue(touchHold, "\"beat\":");     //拍数
 
-        if (split <= 0 || beat <= 0)
+        if (split <= 0 || beat < 0)
             continue;           //剔除无效项
         beat *= 4;
-        float total_beat = static_cast<float>(beat) / split;
 
-        Shidunzi s(split, total_beat, beat, 0, 'H');
+        Shidunzi s(split, beat, 0, 'H');
         push(s);
 
         pos = touchHold_str.find("\"holdTime\":", pos);
@@ -338,9 +328,8 @@ int ShidunziStack::read_as_VM(const std::string& precontent, MainData& m)
 
         if (split <= 0 || beat <= 0)
             continue;           //剔除无效项（应该没有吧？）
-        total_beat = static_cast<float>(beat) / split;
 
-        Shidunzi s2(split, total_beat, beat, 0, 'H');
+        Shidunzi s2(split, beat, 0, 'H');
         push(s2);
     }
 
@@ -360,6 +349,8 @@ int ShidunziStack::read_as_Simai(const std::string& precontent, MainData& m)
     stones.clear();
     m.exs.clear();
     m.ext.clear();
+    // 设置模式
+    auto transformer = m.chartingMode ? _5track_mode : _3track_mode;
     // 读取歌曲信息
     std::string d_str = std::to_string(m.importDiff+1)+"=";
     m.SongInfo.title = extractString(precontent, "&title=", '\n');
@@ -397,17 +388,18 @@ int ShidunziStack::read_as_Simai(const std::string& precontent, MainData& m)
                 bool isBreak = (note_str[1] == 'b');
                 bool isEx = (note_str[1] == 'x' || note_str[2] == 'x');
                 int button = (now - '0');
-                if (button >= 4 && button <= 6)
+                float track = transformer(button,3);
+                if (track)
                 {
                     char C = isEx ? 'S' : (isBreak ? 'X' : 'D');
-                    Shidunzi s (denominator, beat, button - 3, C);
+                    Shidunzi s (denominator, beat, track, C);
                     push(s);
                     stones.back().isNoMulti = isNoMulti;
                     isNoMulti = false;
                 }
                 else
                 {
-                    m.exs.push_back({ (float)beat / denominator, isEx });
+                    m.exs.push_back({ Fraction(beat,denominator), isEx });
                 }
                 erase(isBreak + isEx + 1);
                 continue;
@@ -448,7 +440,7 @@ int ShidunziStack::read_as_Simai(const std::string& precontent, MainData& m)
                 {
                     button += (int)(note_str[1]-'1');
                     end = 1;
-                    m.ext.push_back({ (float)beat / denominator,m.nowTouchSet[button] });
+                    m.ext.push_back({ Fraction(beat,denominator),m.nowTouchSet[button] });
                 }
                 erase(end + 1);
                 continue;
@@ -542,18 +534,17 @@ int ShidunziStack::read_as_OSU(const std::string& precontent, MainData& m)
             float total_beat = (time - m.SongInfo.offset) * (m.SongInfo.bpm / 60);
             float beat = total_beat * denominator;
             beat = (int)beat % denominator;
-            if (beat > 1910 || beat < 10)
+            if (beat > 1900 || beat < 20)
                 beat = 0;
-            total_beat = std::round(total_beat) + beat / denominator;
 
             if (track >= 1 && track <= 3)
             {
-                Shidunzi s(denominator, total_beat, beat, track, obj_type==128);
+                Shidunzi s(denominator, beat, track, obj_type==128);
                 push(s);
             }
             else
             {
-                m.exs.push_back({ total_beat, false });
+                m.exs.push_back({ Fraction(beat,denominator), false });
             }
         }
     }
@@ -561,9 +552,30 @@ int ShidunziStack::read_as_OSU(const std::string& precontent, MainData& m)
     return 0;
 }
 
+// 输入
+void ShidunziStack::input(const QStringList & Qstrlist)
+{
+    Shidunzi s(0,0,0,false);
+    for (auto & str : Qstrlist)
+    {
+        if (str.front()!='/')
+        {
+            s.input(str);
+            push(s);
+        }
+    }
+}
+
 // 输出
 void ShidunziStack::output(std::stringstream & buffer)
 {
+    buffer << "[Data]\n";
     Shidunzi::resetTag_index();
     std::for_each(stones.begin(), stones.end(), [&buffer](Shidunzi& s){s.output(buffer);});
+}
+
+// 镜像
+void ShidunziStack::flip()
+{
+    std::for_each(stones.begin(), stones.end(), [](Shidunzi& s){s.filp();});
 }

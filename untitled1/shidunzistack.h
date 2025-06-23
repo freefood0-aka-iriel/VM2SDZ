@@ -20,8 +20,8 @@ public:
 
     inline const std::deque<Shidunzi>& getStones() const
         { return stones; }
-    inline float getMaxBeat()
-        { return (stones.empty() ? 0 : stones.back().beat) ;}
+    inline Fraction getMaxBeat()
+        { return (stones.empty() ? Fraction::zero : stones.back().beat) ;}
     int getNumber();
     int getNumber(char);
     int getPureNumber();
@@ -31,12 +31,13 @@ public:
     void countAdjust(const ExStone& exs);
     void positionAdjust(const ExTouch& ext);
     void sortByTotalBeat();
-    void gcd();
     void bpmAdjust();
+    void flip();
 
     int read_as_VM(const std::string& content, MainData& m);
     int read_as_OSU(const std::string& precontent, MainData& m);
     int read_as_Simai(const std::string& precontent, MainData& m);
 
+    void input(const QStringList & Qstrlist);
     void output(std::stringstream & buffer);
 };
